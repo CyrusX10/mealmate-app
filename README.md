@@ -20,9 +20,9 @@ The app addresses the growing problem of household food waste by giving users th
 
 | Name | Student ID | Role |
 |------|-----------|------|
-| [Team Leader Name] | [ID] | Team Leader |
-| [Member 2 Name] | [ID] | Member |
-| [Member 3 Name] | [ID] | Member |
+| Agraj K.C | E2300552 | Team Leader |
+| Roshan Shrestha | E2300568 | Member |
+| Arjun Chaudhary | E2300556 | Member |
 
 ---
 
