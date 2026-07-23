@@ -36,6 +36,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_item'])) {
         $error = 'Please fill in all required fields.';
     } elseif ($quantity <= 0) {
         $error = 'Quantity must be greater than 0.';
+    } elseif ($expiry_date < date('Y-m-d')) {
+        $error = 'Expiry date cannot be in the past.';
     } else {
         $stmt = $pdo->prepare("INSERT INTO food_items (user_id, item_name, category, quantity, unit, expiry_date, storage_location, notes) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([$user_id, $item_name, $category, $quantity, $unit, $expiry_date, $storage_location, $notes]);
@@ -347,7 +349,7 @@ function unit_select_html(string $id_prefix, string $current_unit, array $units)
             </div>
             <div class="form-group">
                 <label for="expiry_date">Expiry Date</label>
-                <input type="date" id="expiry_date" name="expiry_date" required>
+                <input type="date" id="expiry_date" name="expiry_date" min="<?= date('Y-m-d') ?>" required>
             </div>
             <div class="form-group">
                 <label for="storage_location">Storage Location</label>

@@ -1,4 +1,5 @@
 <?php
+$page_title = 'Analytics';
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
