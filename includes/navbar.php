@@ -42,3 +42,15 @@ function nav_active($page) {
     </div>
 </nav>
 <main class="container">
+
+<div class="modal-overlay" id="confirmModal">
+    <div class="modal modal-confirm">
+        <div class="modal-confirm-icon" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
+        <h3 id="confirmTitle">Are you sure?</h3>
+        <p id="confirmMessage"></p>
+        <div class="btn-group">
+            <button type="button" class="btn btn-ghost" id="confirmCancelBtn">Cancel</button>
+            <a href="#" class="btn btn-danger" id="confirmActionBtn">Confirm</a>
+        </div>
+    </div>
+</div>

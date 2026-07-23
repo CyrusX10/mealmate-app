@@ -1,4 +1,5 @@
 <?php
+$page_title = 'Dashboard';
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -7,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once '../config/db.php';
+require_once '../includes/helpers.php';
 require_once '../includes/navbar.php';
 
 $user_id = $_SESSION['user_id'];
@@ -40,7 +42,9 @@ $stmt = $pdo->prepare("SELECT COUNT(*) FROM food_saved_log WHERE user_id = ? AND
 $stmt->execute([$user_id]);
 $total_consumed = $stmt->fetchColumn();
 
-$stmt = $pdo->prepare("SELECT * FROM food_items WHERE user_id = ? ORDER BY created_at DESC LIMIT 5");
+// Only currently-available items — consumed/donated items have already
+// "vanished" from view (they're still tracked historically via Analytics).
+$stmt = $pdo->prepare("SELECT * FROM food_items WHERE user_id = ? AND status = 'available' ORDER BY created_at DESC LIMIT 5");
 $stmt->execute([$user_id]);
 $recent_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -52,60 +56,76 @@ $recent_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="stats-grid">
     <div class="stat-card">
-        <h3><?= $total_items ?></h3>
-        <p>Items in Inventory</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <div>
+            <h3><?= $total_items ?></h3>
+            <p>Items in Inventory</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $expiring_soon ?></h3>
-        <p>Expiring Soon</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-clock"></i></span>
+        <div>
+            <h3><?= $expiring_soon ?></h3>
+            <p>Expiring Soon</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $total_saved ?></h3>
-        <p>Total Saved from Waste</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-leaf"></i></span>
+        <div>
+            <h3><?= $total_saved ?></h3>
+            <p>Total Saved from Waste</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $total_donated ?></h3>
-        <p>Donations Made</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-hand-holding-heart"></i></span>
+        <div>
+            <h3><?= $total_donated ?></h3>
+            <p>Donations Made</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $total_consumed ?></h3>
-        <p>Items Consumed</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-utensils"></i></span>
+        <div>
+            <h3><?= $total_consumed ?></h3>
+            <p>Items Consumed</p>
+        </div>
     </div>
 </div>
 
 <div class="action-bar">
     <h2>Recent Items</h2>
-    <a href="<?= BASE_URL ?>/pages/inventory.php" class="btn btn-accent">Manage Inventory</a>
+    <a href="<?= BASE_URL ?>/pages/inventory.php" class="btn btn-accent"><i class="fa-solid fa-boxes-stacked"></i> Manage Inventory</a>
 </div>
 
 <?php if (count($recent_items) > 0): ?>
     <div class="card-grid">
         <?php foreach ($recent_items as $item):
-            $days_left = floor((strtotime($item['expiry_date']) - time()) / 86400);
-            $expiry_class = 'expiry-safe';
-            if ($days_left < 0) $expiry_class = 'expiry-danger';
-            elseif ($days_left <= 3) $expiry_class = 'expiry-warning';
+            $days_left = (int) floor((strtotime($item['expiry_date']) - time()) / 86400);
+            $badge = expiry_badge($days_left);
+            $qty_display = rtrim(rtrim(number_format((float) $item['quantity'], 2), '0'), '.');
         ?>
-            <div class="card <?= $expiry_class ?>">
-                <h3><?= htmlspecialchars($item['item_name']) ?></h3>
-                <p>Category: <?= ucfirst($item['category']) ?></p>
-                <p>Qty: <?= htmlspecialchars($item['quantity']) ?> <?= htmlspecialchars($item['unit']) ?></p>
-                <p>Expires: <?= htmlspecialchars($item['expiry_date']) ?>
-                    <?php if ($days_left < 0): ?>
-                        <span style="color:var(--expiry-danger);font-weight:bold;">(Expired)</span>
-                    <?php elseif ($days_left == 0): ?>
-                        <span style="color:var(--expiry-warning);font-weight:bold;">(Today)</span>
-                    <?php else: ?>
-                        <span>(<?= $days_left ?> days left)</span>
-                    <?php endif; ?>
-                </p>
-                <p>Storage: <?= ucfirst($item['storage_location']) ?></p>
+            <div class="card <?= $badge['class'] ?>">
+                <div class="item-card-header">
+                    <span class="item-icon"><i class="fa-solid <?= category_icon($item['category']) ?>"></i></span>
+                    <div>
+                        <h3><?= htmlspecialchars($item['item_name']) ?></h3>
+                        <span class="item-category"><?= ucfirst($item['category']) ?></span>
+                    </div>
+                </div>
+                <div class="item-pills">
+                    <span class="pill"><i class="fa-solid fa-scale-balanced"></i> <?= htmlspecialchars($qty_display) ?> <?= htmlspecialchars($item['unit']) ?></span>
+                    <span class="pill"><i class="fa-solid <?= storage_icon($item['storage_location']) ?>"></i> <?= ucfirst($item['storage_location']) ?></span>
+                    <span class="pill pill-<?= $badge['class'] ?>"><i class="fa-solid <?= $badge['icon'] ?>"></i> <?= $badge['label'] ?></span>
+                </div>
             </div>
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="card">
-        <p>No items in your inventory yet. <a href="<?= BASE_URL ?>/pages/inventory.php">Add your first item</a>.</p>
+    <div class="card empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+        <h3>No items yet</h3>
+        <p>Add your first food item to start tracking what's in your kitchen.</p>
+        <a href="<?= BASE_URL ?>/pages/inventory.php" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Add your first item</a>
     </div>
 <?php endif; ?>
 

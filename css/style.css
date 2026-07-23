@@ -812,10 +812,12 @@ tr:hover { background: rgba(82,183,136,0.05); }
     background: #fff;
     color: var(--ink);
     border-radius: 10px 10px 0 0;
-    padding: 1.1rem 1.25rem 1rem;
+    padding: 1.25rem 1.4rem 1.1rem;
     font-family: var(--font-mono);
     box-shadow: 0 12px 30px rgba(0,0,0,0.25);
     position: relative;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .receipt::after {
@@ -829,30 +831,41 @@ tr:hover { background: rgba(82,183,136,0.05); }
 }
 
 .receipt-title {
-    font-size: 0.7rem;
+    font-size: 0.72rem;
     font-weight: 700;
     letter-spacing: 0.14em;
     color: var(--text-light);
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.75rem;
     border-bottom: 1px dashed var(--oat-border);
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.6rem;
 }
 
 .receipt-row {
     display: flex;
     justify-content: space-between;
+    align-items: baseline;
+    gap: 1.5rem;
     font-size: 0.85rem;
-    padding: 0.2rem 0;
+    padding: 0.3rem 0;
+}
+
+.receipt-row span:first-child {
+    color: var(--text-light);
+}
+
+.receipt-row span:last-child {
+    font-weight: 600;
+    white-space: nowrap;
 }
 
 .receipt-divider {
     border-top: 1px dashed var(--oat-border);
-    margin: 0.4rem 0;
+    margin: 0.5rem 0;
 }
 
 .receipt-total {
     font-weight: 700;
-    font-size: 0.95rem;
+    font-size: 1rem;
     color: var(--primary-dark);
 }
 
@@ -1022,3 +1035,307 @@ tr:hover { background: rgba(82,183,136,0.05); }
     .hero h1 { font-size: 2rem; }
     .receipt-standalone { transform: none; max-width: 100%; }
 }
+
+/* ============================================================
+   Toast notifications (opt-in via .alert-toast)
+   ============================================================ */
+.alert.alert-toast {
+    position: fixed;
+    right: 20px;
+    left: auto;
+    z-index: 3000;
+    min-width: 280px;
+    max-width: 380px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.6rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.18);
+    animation: toastIn 0.35s cubic-bezier(.21,1.02,.73,1) both;
+}
+
+.alert.alert-toast.toast-out {
+    animation: toastOut 0.3s ease forwards;
+}
+
+@keyframes toastIn {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes toastOut {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+}
+
+.alert-close {
+    background: none;
+    border: none;
+    font-size: 1.1rem;
+    line-height: 1;
+    cursor: pointer;
+    color: inherit;
+    opacity: 0.6;
+    padding: 0 0.15rem;
+}
+
+.alert-close:hover { opacity: 1; }
+
+/* ============================================================
+   Custom confirm modal
+   ============================================================ */
+.modal-confirm {
+    text-align: center;
+    max-width: 380px;
+}
+
+.modal-confirm-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 1rem;
+    font-size: 1.4rem;
+    color: #fff;
+}
+
+.modal-confirm-icon-danger { background: var(--error); }
+.modal-confirm-icon-primary { background: var(--primary); }
+.modal-confirm-icon-warning { background: var(--warning); color: #333; }
+
+.modal-confirm h3 { margin-bottom: 0.5rem; }
+.modal-confirm p { color: var(--text-light); margin-bottom: 1.25rem; }
+.modal-confirm .btn-group { justify-content: center; }
+
+/* ============================================================
+   Item cards (Inventory / Dashboard Recent Items / Browse)
+   ============================================================ */
+.item-card-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.item-icon {
+    flex-shrink: 0;
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--oat);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+}
+
+.item-card-header h3 { margin-bottom: 0.1rem; }
+
+.item-category {
+    font-size: 0.8rem;
+    color: var(--text-light);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.item-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.6rem;
+}
+
+.pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    font-size: 0.78rem;
+    color: var(--text);
+}
+
+.pill i { font-size: 0.75em; color: var(--text-light); }
+
+.pill-expiry-safe { border-color: rgba(45,106,79,0.3); color: var(--primary-dark); }
+.pill-expiry-safe i { color: var(--expiry-safe); }
+.pill-expiry-warning { border-color: rgba(230,126,34,0.4); color: #8a4b06; }
+.pill-expiry-warning i { color: var(--expiry-warning); }
+.pill-expiry-danger { border-color: rgba(220,53,69,0.4); color: #8a1c26; }
+.pill-expiry-danger i { color: var(--expiry-danger); }
+
+.item-notes {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    background: var(--oat);
+    border-radius: 6px;
+    padding: 0.4rem 0.6rem;
+    margin-bottom: 0.6rem;
+}
+
+.donor-name {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+
+/* ============================================================
+   Empty states
+   ============================================================ */
+.empty-state {
+    text-align: center;
+    padding: 3rem 1.5rem;
+}
+
+.empty-state-icon {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: var(--oat);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.6rem;
+    margin: 0 auto 1rem;
+}
+
+.empty-state h3 { margin-bottom: 0.4rem; }
+.empty-state p { color: var(--text-light); margin-bottom: 1rem; }
+
+/* ============================================================
+   Stat cards with icons
+   ============================================================ */
+.stat-card {
+    text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
+
+.stat-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--oat);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    flex-shrink: 0;
+}
+
+.stat-card h3 { margin-bottom: 0.1rem; }
+
+/* ============================================================
+   Notifications — icon + icon-button actions
+   ============================================================ */
+.notif-item {
+    gap: 0.75rem;
+}
+
+.notif-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--oat);
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 0.9rem;
+}
+
+.notif-body { display: flex; align-items: flex-start; gap: 0.75rem; }
+
+.notif-type-label {
+    text-transform: capitalize;
+    font-weight: 600;
+    color: var(--primary);
+}
+
+.icon-btn {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--oat);
+    color: var(--text);
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.85rem;
+    transition: background 0.15s, color 0.15s;
+}
+
+.icon-btn:hover { background: var(--accent-light); color: var(--primary-dark); }
+.icon-btn-danger:hover { background: #f8d7da; color: var(--error); }
+
+/* ============================================================
+   Meal planner enhancements
+   ============================================================ */
+.week-summary {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--oat);
+    color: var(--primary-dark);
+    border-radius: 999px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.week-day.today {
+    background: #e3f5ea;
+    border: 1.5px solid var(--accent);
+}
+
+.week-day.today .day-header { color: var(--primary-dark); }
+.week-day.today .day-header::after {
+    content: 'Today';
+    display: block;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-top: 0.15rem;
+}
+
+.meal-entry {
+    border-left: 3px solid var(--primary);
+}
+
+.meal-entry.meal-breakfast { background: #fff3cd; border-left-color: #e6a800; }
+.meal-entry.meal-lunch { background: #d8f3dc; border-left-color: var(--accent); }
+.meal-entry.meal-dinner { background: #dbe7ff; border-left-color: #3f6fd8; }
+
+.meal-entry .meal-type i { margin-right: 0.2rem; }
+
+.day-add-btn {
+    width: 100%;
+    background: none;
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    color: var(--text-light);
+    padding: 0.4rem;
+    cursor: pointer;
+    font-size: 0.85rem;
+    transition: border-color 0.15s, color 0.15s;
+}
+
+.day-add-btn:hover { border-color: var(--accent); color: var(--primary); }
+
+/* Unit dropdown "other" field */
+.unit-custom-wrap { margin-top: 0.5rem; }

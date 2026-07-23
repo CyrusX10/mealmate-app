@@ -1,4 +1,5 @@
 <?php
+$page_title = 'Meal Planner';
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -11,6 +12,11 @@ require_once '../config/db.php';
 $user_id = $_SESSION['user_id'];
 $success = '';
 $error = '';
+
+function meal_type_icon(string $type): string {
+    $icons = ['breakfast' => 'fa-egg', 'lunch' => 'fa-bowl-food', 'dinner' => 'fa-utensils'];
+    return $icons[$type] ?? 'fa-utensils';
+}
 
 // Week navigation
 $week_offset = isset($_GET['week']) ? (int)$_GET['week'] : 0;
@@ -49,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_meal'])) {
 if (isset($_GET['delete_meal'])) {
     $stmt = $pdo->prepare("DELETE FROM meal_plans WHERE id = ? AND user_id = ?");
     $stmt->execute([$_GET['delete_meal'], $user_id]);
-    header('Location: <?= BASE_URL ?>/pages/meal-planner.php?week=' . $week_offset);
+    header('Location: ' . BASE_URL . '/pages/meal-planner.php?week=' . $week_offset);
     exit;
 }
 
@@ -73,20 +79,23 @@ $suggestions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 require_once '../includes/navbar.php';
 
 $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+$today_str = date('Y-m-d');
 ?>
 
-<h1>Meal Planner</h1>
+<div class="page-header">
+    <div>
+        <h1><i class="fa-solid fa-utensils"></i> Meal Planner</h1>
+        <p class="page-subtitle">Plan meals around what's about to expire.</p>
+    </div>
+    <button class="btn btn-primary" data-modal="addMealModal"><i class="fa-solid fa-plus"></i> Add Meal</button>
+</div>
 
 <?php if ($error): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error alert-toast"><i class="fa-solid fa-circle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 <?php if ($success): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+    <div class="alert alert-success alert-toast"><i class="fa-solid fa-circle-check"></i> <?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
-
-<div class="action-bar">
-    <button class="btn btn-primary" data-modal="addMealModal">+ Add Meal</button>
-</div>
 
 <div class="week-nav">
     <a href="?week=<?= $week_offset - 1 ?>" class="btn btn-accent">&larr; Previous Week</a>
@@ -94,9 +103,11 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
     <a href="?week=<?= $week_offset + 1 ?>" class="btn btn-accent">Next Week &rarr;</a>
 </div>
 
+<span class="week-summary"><i class="fa-solid fa-calendar-check"></i> <?= count($meals) ?> meal<?= count($meals) !== 1 ? 's' : '' ?> planned this week</span>
+
 <?php if (count($suggestions) > 0): ?>
     <div class="suggestions">
-        <h3>Suggestions: Items Expiring Soon</h3>
+        <h3><i class="fa-solid fa-lightbulb"></i> Suggestions: Items Expiring Soon</h3>
         <?php foreach ($suggestions as $s): ?>
             <div class="suggestion-item">
                 <span><?= htmlspecialchars($s['item_name']) ?> &ndash; expires <?= htmlspecialchars($s['expiry_date']) ?></span>
@@ -112,21 +123,28 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
         $date_str = date('Y-m-d', $date_ts);
         $day_name = $day_names[$i];
         $day_meals = $meals_by_date[$date_str] ?? [];
+        $is_today = $date_str === $today_str;
     ?>
-        <div class="week-day">
+        <div class="week-day <?= $is_today ? 'today' : '' ?>">
             <div class="day-header"><?= $day_name ?><br><?= date('M j', $date_ts) ?></div>
             <?php foreach ($day_meals as $meal): ?>
-                <div class="meal-entry">
+                <div class="meal-entry meal-<?= htmlspecialchars($meal['meal_type']) ?>">
                     <div>
-                        <span class="meal-type"><?= htmlspecialchars($meal['meal_type']) ?>:</span>
+                        <span class="meal-type"><i class="fa-solid <?= meal_type_icon($meal['meal_type']) ?>"></i> <?= htmlspecialchars($meal['meal_type']) ?>:</span>
                         <?= htmlspecialchars($meal['meal_name']) ?>
                     </div>
                     <div class="meal-actions">
                         <button class="btn-edit-meal" data-id="<?= $meal['id'] ?>" data-name="<?= htmlspecialchars($meal['meal_name'], ENT_QUOTES) ?>" data-type="<?= $meal['meal_type'] ?>" data-notes="<?= htmlspecialchars($meal['notes'] ?? '', ENT_QUOTES) ?>" title="Edit">&#9998;</button>
-                        <a href="?delete_meal=<?= $meal['id'] ?>&week=<?= $week_offset ?>" onclick="return confirm('Delete this meal?')" title="Delete">&times;</a>
+                        <a href="?delete_meal=<?= $meal['id'] ?>&week=<?= $week_offset ?>" title="Delete"
+                           data-confirm-title="Delete this meal?"
+                           data-confirm-message="Remove &quot;<?= htmlspecialchars($meal['meal_name'], ENT_QUOTES) ?>&quot; from your plan?"
+                           data-confirm-icon="fa-trash" data-confirm-variant="danger" data-confirm-label="Delete">&times;</a>
                     </div>
                 </div>
             <?php endforeach; ?>
+            <button type="button" class="day-add-btn" data-modal="addMealModal" data-prefill-date="<?= $date_str ?>">
+                <i class="fa-solid fa-plus"></i>
+            </button>
         </div>
     <?php endfor; ?>
 </div>
@@ -134,7 +152,7 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 <!-- Add Meal Modal -->
 <div class="modal-overlay" id="addMealModal">
     <div class="modal">
-        <h2>Add Meal</h2>
+        <h2><i class="fa-solid fa-plus"></i> Add Meal</h2>
         <form method="POST" action="?week=<?= $week_offset ?>">
             <div class="form-group">
                 <label for="meal_date">Date</label>
@@ -159,7 +177,7 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
             </div>
             <div class="btn-group">
                 <button type="submit" name="add_meal" class="btn btn-primary">Add Meal</button>
-                <button type="button" class="btn btn-danger close-modal">Cancel</button>
+                <button type="button" class="btn btn-ghost close-modal">Cancel</button>
             </div>
         </form>
     </div>
@@ -168,7 +186,7 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
 <!-- Edit Meal Modal -->
 <div class="modal-overlay" id="editMealModal">
     <div class="modal">
-        <h2>Edit Meal</h2>
+        <h2><i class="fa-solid fa-pen"></i> Edit Meal</h2>
         <form method="POST" action="?week=<?= $week_offset ?>">
             <input type="hidden" name="meal_id" id="edit_meal_id">
             <div class="form-group">
@@ -189,7 +207,7 @@ $day_names = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'
             </div>
             <div class="btn-group">
                 <button type="submit" name="edit_meal" class="btn btn-primary">Update Meal</button>
-                <button type="button" class="btn btn-danger close-modal">Cancel</button>
+                <button type="button" class="btn btn-ghost close-modal">Cancel</button>
             </div>
         </form>
     </div>

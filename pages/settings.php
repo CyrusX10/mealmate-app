@@ -44,10 +44,10 @@ require_once '../includes/navbar.php';
 </div>
 
 <?php if ($success): ?>
-    <div class="alert alert-success"><i class="fa-solid fa-circle-check"></i> <?= htmlspecialchars($success) ?></div>
+    <div class="alert alert-success alert-toast"><i class="fa-solid fa-circle-check"></i> <?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
 <?php if ($error): ?>
-    <div class="alert alert-error"><i class="fa-solid fa-circle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error alert-toast"><i class="fa-solid fa-circle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 
 <div class="card">

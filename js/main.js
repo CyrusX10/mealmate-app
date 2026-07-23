@@ -9,63 +9,94 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Auto-hide alerts after 5 seconds
-    var alerts = document.querySelectorAll('.alert');
-    alerts.forEach(function(alert) {
-        setTimeout(function() {
-            alert.style.transition = 'opacity 0.5s';
-            alert.style.opacity = '0';
-            setTimeout(function() { alert.remove(); }, 500);
-        }, 5000);
+    // Toasts: only elements explicitly marked .alert-toast auto-dismiss.
+    // Plain .alert (e.g. auth-page validation errors) stay put so the user
+    // has time to read and fix them.
+    var toasts = document.querySelectorAll('.alert.alert-toast');
+    toasts.forEach(function(toast, i) {
+        toast.style.top = (88 + i * 64) + 'px';
+
+        var closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.className = 'alert-close';
+        closeBtn.innerHTML = '&times;';
+        closeBtn.setAttribute('aria-label', 'Dismiss');
+        closeBtn.addEventListener('click', function() { dismissToast(toast); });
+        toast.appendChild(closeBtn);
+
+        setTimeout(function() { dismissToast(toast); }, 4500);
     });
 
-    // Confirm delete
-    var deleteBtns = document.querySelectorAll('.btn-delete');
-    deleteBtns.forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            if (!confirm('Are you sure you want to delete this item?')) {
-                e.preventDefault();
-            }
-        });
-    });
+    function dismissToast(toast) {
+        if (!toast || toast.dataset.dismissing) return;
+        toast.dataset.dismissing = '1';
+        toast.classList.add('toast-out');
+        setTimeout(function() { toast.remove(); }, 300);
+    }
 
-    // Confirm consume
-    var consumeBtns = document.querySelectorAll('.btn-consume');
-    consumeBtns.forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            if (!confirm('Mark this item as consumed?')) {
-                e.preventDefault();
-            }
-        });
-    });
+    // --- Custom confirm modal (replaces native confirm() popups) -------
+    var confirmModal = document.getElementById('confirmModal');
+    if (confirmModal) {
+        var confirmTitleEl = document.getElementById('confirmTitle');
+        var confirmMessageEl = document.getElementById('confirmMessage');
+        var confirmIconEl = document.getElementById('confirmIcon');
+        var confirmActionBtn = document.getElementById('confirmActionBtn');
+        var confirmCancelBtn = document.getElementById('confirmCancelBtn');
 
-    // Confirm donate
-    var donateBtns = document.querySelectorAll('.btn-donate');
-    donateBtns.forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            if (!confirm('Convert this item to a donation listing?')) {
+        document.querySelectorAll('[data-confirm-title]').forEach(function(el) {
+            el.addEventListener('click', function(e) {
                 e.preventDefault();
-            }
-        });
-    });
+                var href = this.getAttribute('href');
+                var variant = this.dataset.confirmVariant || 'danger';
 
-    // Confirm claim
-    var claimBtns = document.querySelectorAll('.btn-claim');
-    claimBtns.forEach(function(btn) {
-        btn.addEventListener('click', function(e) {
-            if (!confirm('Claim this donation?')) {
-                e.preventDefault();
-            }
+                confirmTitleEl.textContent = this.dataset.confirmTitle || 'Are you sure?';
+                confirmMessageEl.textContent = this.dataset.confirmMessage || '';
+                confirmActionBtn.textContent = this.dataset.confirmLabel || 'Confirm';
+                confirmActionBtn.className = 'btn btn-' + variant;
+                confirmIconEl.className = 'modal-confirm-icon modal-confirm-icon-' + variant;
+                confirmIconEl.innerHTML = '<i class="fa-solid ' + (this.dataset.confirmIcon || 'fa-triangle-exclamation') + '"></i>';
+
+                confirmActionBtn.onclick = function(ev) {
+                    ev.preventDefault();
+                    confirmModal.classList.remove('active');
+                    if (href) window.location.href = href;
+                };
+
+                confirmModal.classList.add('active');
+            });
         });
-    });
+
+        if (confirmCancelBtn) {
+            confirmCancelBtn.addEventListener('click', function() {
+                confirmModal.classList.remove('active');
+            });
+        }
+    }
 
     // Open modal
     var modalTriggers = document.querySelectorAll('[data-modal]');
     modalTriggers.forEach(function(trigger) {
         trigger.addEventListener('click', function() {
             var target = document.getElementById(this.dataset.modal);
-            if (target) target.classList.add('active');
+            if (target) {
+                target.classList.add('active');
+                if (this.dataset.prefillDate) {
+                    var dateField = target.querySelector('input[type="date"]');
+                    if (dateField) dateField.value = this.dataset.prefillDate;
+                }
+            }
         });
+    });
+
+    // --- Unit dropdown: reveal a custom text field when "Other" is chosen
+    document.querySelectorAll('.unit-select').forEach(function(sel) {
+        var wrap = document.getElementById(sel.dataset.customTarget);
+        function sync() {
+            if (!wrap) return;
+            wrap.style.display = sel.value === 'other' ? 'block' : 'none';
+        }
+        sel.addEventListener('change', sync);
+        sync();
     });
 
     // Close modal on overlay click

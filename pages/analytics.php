@@ -46,7 +46,7 @@ $current_inventory = $stmt->fetchColumn();
 require_once '../includes/navbar.php';
 ?>
 
-<h1>Food Analytics</h1>
+<h1><i class="fa-solid fa-chart-simple"></i> Food Analytics</h1>
 
 <div class="filters">
     <form method="GET" action="">
@@ -61,20 +61,32 @@ require_once '../includes/navbar.php';
 
 <div class="stats-grid">
     <div class="stat-card">
-        <h3><?= $total_saved ?></h3>
-        <p>Total Saved from Waste</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-leaf"></i></span>
+        <div>
+            <h3><?= $total_saved ?></h3>
+            <p>Total Saved from Waste</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $total_donated ?></h3>
-        <p>Donations Made</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-hand-holding-heart"></i></span>
+        <div>
+            <h3><?= $total_donated ?></h3>
+            <p>Donations Made</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $total_consumed ?></h3>
-        <p>Items Consumed</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-utensils"></i></span>
+        <div>
+            <h3><?= $total_consumed ?></h3>
+            <p>Items Consumed</p>
+        </div>
     </div>
     <div class="stat-card">
-        <h3><?= $current_inventory ?></h3>
-        <p>Current Inventory</p>
+        <span class="stat-card-icon"><i class="fa-solid fa-boxes-stacked"></i></span>
+        <div>
+            <h3><?= $current_inventory ?></h3>
+            <p>Current Inventory</p>
+        </div>
     </div>
 </div>
 

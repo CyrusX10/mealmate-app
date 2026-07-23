@@ -1,4 +1,5 @@
 <?php
+$page_title = 'Browse Donations';
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
@@ -7,6 +8,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once '../config/db.php';
+require_once '../includes/helpers.php';
 
 $user_id = $_SESSION['user_id'];
 $success = '';
@@ -76,13 +78,13 @@ $my_claims = $stmt->fetchAll(PDO::FETCH_ASSOC);
 require_once '../includes/navbar.php';
 ?>
 
-<h1>Browse Donations</h1>
+<h1><i class="fa-solid fa-magnifying-glass"></i> Browse Donations</h1>
 
 <?php if ($error): ?>
-    <div class="alert alert-error"><?= htmlspecialchars($error) ?></div>
+    <div class="alert alert-error alert-toast"><i class="fa-solid fa-circle-exclamation"></i> <?= htmlspecialchars($error) ?></div>
 <?php endif; ?>
 <?php if ($success): ?>
-    <div class="alert alert-success"><?= htmlspecialchars($success) ?></div>
+    <div class="alert alert-success alert-toast"><i class="fa-solid fa-circle-check"></i> <?= htmlspecialchars($success) ?></div>
 <?php endif; ?>
 
 <div class="filters">
@@ -113,33 +115,36 @@ require_once '../includes/navbar.php';
 <?php if (count($donations) > 0): ?>
     <div class="card-grid">
         <?php foreach ($donations as $item):
-            $days_left = floor((strtotime($item['expiry_date']) - time()) / 86400);
-            $expiry_class = 'expiry-safe';
-            if ($days_left < 0) $expiry_class = 'expiry-danger';
-            elseif ($days_left <= 3) $expiry_class = 'expiry-warning';
+            $days_left = (int) floor((strtotime($item['expiry_date']) - time()) / 86400);
+            $badge = expiry_badge($days_left);
+            $qty_display = rtrim(rtrim(number_format((float) $item['quantity'], 2), '0'), '.');
         ?>
-            <div class="card <?= $expiry_class ?>">
-                <h3><?= htmlspecialchars($item['item_name']) ?></h3>
-                <p><strong>Donor:</strong> <?= htmlspecialchars($item['donor_name']) ?></p>
-                <p><strong>Category:</strong> <?= ucfirst($item['category']) ?></p>
-                <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']) ?> <?= htmlspecialchars($item['unit']) ?></p>
-                <p><strong>Expiry:</strong> <?= htmlspecialchars($item['expiry_date']) ?>
-                    <?php if ($days_left < 0): ?>
-                        <span style="color:var(--expiry-danger);font-weight:bold;">(Expired)</span>
-                    <?php elseif ($days_left <= 3): ?>
-                        <span style="color:var(--expiry-warning);">(<?= $days_left ?> days)</span>
-                    <?php else: ?>
-                        <span>(<?= $days_left ?> days)</span>
-                    <?php endif; ?>
-                </p>
-                <p><strong>Storage:</strong> <?= ucfirst($item['storage_location']) ?></p>
+            <div class="card <?= $badge['class'] ?>">
+                <div class="item-card-header">
+                    <span class="item-icon"><i class="fa-solid <?= category_icon($item['category']) ?>"></i></span>
+                    <div>
+                        <h3><?= htmlspecialchars($item['item_name']) ?></h3>
+                        <span class="item-category"><?= ucfirst($item['category']) ?></span>
+                    </div>
+                </div>
+                <p class="donor-name"><i class="fa-solid fa-user"></i> Donated by <?= htmlspecialchars($item['donor_name']) ?></p>
+                <div class="item-pills">
+                    <span class="pill"><i class="fa-solid fa-scale-balanced"></i> <?= htmlspecialchars($qty_display) ?> <?= htmlspecialchars($item['unit']) ?></span>
+                    <span class="pill"><i class="fa-solid <?= storage_icon($item['storage_location']) ?>"></i> <?= ucfirst($item['storage_location']) ?></span>
+                    <span class="pill pill-<?= $badge['class'] ?>"><i class="fa-solid <?= $badge['icon'] ?>"></i> <?= $badge['label'] ?></span>
+                </div>
                 <?php if (!empty($item['notes'])): ?>
-                    <p><strong>Notes:</strong> <?= htmlspecialchars($item['notes']) ?></p>
+                    <p class="item-notes"><?= htmlspecialchars($item['notes']) ?></p>
                 <?php endif; ?>
                 <div class="btn-group">
-                    <button class="btn btn-sm btn-accent" data-modal="detailModal<?= $item['donation_id'] ?>">Details</button>
+                    <button class="btn btn-sm btn-accent" data-modal="detailModal<?= $item['donation_id'] ?>"><i class="fa-solid fa-circle-info"></i> Details</button>
                     <?php if ($item['donor_id'] != $user_id): ?>
-                        <a href="?claim=<?= $item['donation_id'] ?>" class="btn btn-sm btn-primary btn-claim">Claim</a>
+                        <a href="?claim=<?= $item['donation_id'] ?>" class="btn btn-sm btn-primary"
+                           data-confirm-title="Claim this donation?"
+                           data-confirm-message="You're claiming <?= htmlspecialchars($qty_display, ENT_QUOTES) ?> <?= htmlspecialchars($item['unit'], ENT_QUOTES) ?> of <?= htmlspecialchars($item['item_name'], ENT_QUOTES) ?> from <?= htmlspecialchars($item['donor_name'], ENT_QUOTES) ?>."
+                           data-confirm-icon="fa-hand-holding-heart" data-confirm-variant="primary" data-confirm-label="Claim it">
+                            <i class="fa-solid fa-hand-holding-heart"></i> Claim
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -150,7 +155,7 @@ require_once '../includes/navbar.php';
                     <h2><?= htmlspecialchars($item['item_name']) ?></h2>
                     <p><strong>Donor:</strong> <?= htmlspecialchars($item['donor_name']) ?></p>
                     <p><strong>Category:</strong> <?= ucfirst($item['category']) ?></p>
-                    <p><strong>Quantity:</strong> <?= htmlspecialchars($item['quantity']) ?> <?= htmlspecialchars($item['unit']) ?></p>
+                    <p><strong>Quantity:</strong> <?= htmlspecialchars($qty_display) ?> <?= htmlspecialchars($item['unit']) ?></p>
                     <p><strong>Expiry Date:</strong> <?= htmlspecialchars($item['expiry_date']) ?></p>
                     <p><strong>Storage Location:</strong> <?= ucfirst($item['storage_location']) ?></p>
                     <?php if (!empty($item['notes'])): ?>
@@ -165,8 +170,10 @@ require_once '../includes/navbar.php';
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="card">
-        <p>No donations available at the moment. Check back later!</p>
+    <div class="card empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-hand-holding-heart"></i></div>
+        <h3>No donations available right now</h3>
+        <p>Check back later, or list one of your own surplus items from your Inventory.</p>
     </div>
 <?php endif; ?>
 
@@ -174,21 +181,31 @@ require_once '../includes/navbar.php';
 
 <?php if (count($my_claims) > 0): ?>
     <div class="card-grid">
-        <?php foreach ($my_claims as $claim): ?>
+        <?php foreach ($my_claims as $claim):
+            $qty_display = rtrim(rtrim(number_format((float) $claim['quantity'], 2), '0'), '.');
+        ?>
             <div class="card">
-                <h3><?= htmlspecialchars($claim['item_name']) ?></h3>
-                <p><strong>Donor:</strong> <?= htmlspecialchars($claim['donor_name']) ?></p>
-                <p><strong>Category:</strong> <?= ucfirst($claim['category']) ?></p>
-                <p><strong>Quantity:</strong> <?= htmlspecialchars($claim['quantity']) ?> <?= htmlspecialchars($claim['unit']) ?></p>
-                <p><strong>Expiry:</strong> <?= htmlspecialchars($claim['expiry_date']) ?></p>
-                <p><strong>Status:</strong> <?= ucfirst($claim['status']) ?></p>
-                <p><strong>Claimed:</strong> <?= htmlspecialchars($claim['claimed_at']) ?></p>
+                <div class="item-card-header">
+                    <span class="item-icon"><i class="fa-solid <?= category_icon($claim['category']) ?>"></i></span>
+                    <div>
+                        <h3><?= htmlspecialchars($claim['item_name']) ?></h3>
+                        <span class="item-category"><?= ucfirst($claim['category']) ?></span>
+                    </div>
+                </div>
+                <p class="donor-name"><i class="fa-solid fa-user"></i> Donated by <?= htmlspecialchars($claim['donor_name']) ?></p>
+                <div class="item-pills">
+                    <span class="pill"><i class="fa-solid fa-scale-balanced"></i> <?= htmlspecialchars($qty_display) ?> <?= htmlspecialchars($claim['unit']) ?></span>
+                    <span class="pill"><i class="fa-solid fa-circle-check"></i> <?= ucfirst($claim['status']) ?></span>
+                </div>
+                <p class="item-notes"><i class="fa-solid fa-clock"></i> Claimed <?= htmlspecialchars($claim['claimed_at']) ?></p>
             </div>
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div class="card">
-        <p>You haven't claimed any donations yet.</p>
+    <div class="card empty-state">
+        <div class="empty-state-icon"><i class="fa-solid fa-basket-shopping"></i></div>
+        <h3>No claims yet</h3>
+        <p>Donations you claim from other members will show up here.</p>
     </div>
 <?php endif; ?>
 
