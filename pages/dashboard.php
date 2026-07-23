@@ -13,13 +13,26 @@ require_once '../includes/navbar.php';
 
 $user_id = $_SESSION['user_id'];
 
-// Generate expiry notifications
-$stmt = $pdo->prepare("SELECT id, item_name FROM food_items WHERE user_id = ? AND status = 'available' AND expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY) AND id NOT IN (SELECT SUBSTRING_INDEX(message, ':', 1) FROM notifications WHERE user_id = ? AND type = 'expiry' AND DATE(created_at) = CURDATE())");
+// Generate expiry notifications — one per item per day. Previously this
+// tried to recover the item ID by parsing it back out of the message text
+// with SUBSTRING_INDEX(message, ':', 1), which silently breaks for any
+// message that doesn't start with a plain numeric ID. Using a real
+// related_item_id column instead is both simpler and correct.
+$stmt = $pdo->prepare("
+    SELECT id, item_name FROM food_items
+    WHERE user_id = ? AND status = 'available'
+      AND expiry_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 3 DAY)
+      AND id NOT IN (
+          SELECT related_item_id FROM notifications
+          WHERE user_id = ? AND type = 'expiry' AND related_item_id IS NOT NULL
+            AND DATE(created_at) = CURDATE()
+      )
+");
 $stmt->execute([$user_id, $user_id]);
 $expiring = $stmt->fetchAll(PDO::FETCH_ASSOC);
 foreach ($expiring as $item) {
-    $stmt = $pdo->prepare("INSERT INTO notifications (user_id, type, message) VALUES (?, 'expiry', ?)");
-    $stmt->execute([$user_id, $item['id'] . ':' . $item['item_name'] . ' is expiring soon!']);
+    $stmt = $pdo->prepare("INSERT INTO notifications (user_id, type, message, related_item_id) VALUES (?, 'expiry', ?, ?)");
+    $stmt->execute([$user_id, $item['item_name'] . ' is expiring soon!', $item['id']]);
 }
 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM food_items WHERE user_id = ? AND status = 'available'");

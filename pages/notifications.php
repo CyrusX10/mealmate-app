@@ -76,19 +76,13 @@ require_once '../includes/navbar.php';
 
 <?php if (count($notifications) > 0): ?>
     <ul class="notif-list">
-        <?php foreach ($notifications as $notif):
-            $message = $notif['message'];
-            // Strip item ID prefix from expiry notifications
-            if ($notif['type'] === 'expiry' && strpos($message, ':') !== false) {
-                $message = substr($message, strpos($message, ':') + 1);
-            }
-        ?>
+        <?php foreach ($notifications as $notif): ?>
             <li class="notif-item <?= !$notif['is_read'] ? 'unread' : '' ?>">
                 <div class="notif-body">
                     <span class="notif-icon"><i class="fa-solid <?= notif_icon($notif['type']) ?>"></i></span>
                     <div>
                         <span class="notif-type-label"><?= htmlspecialchars($notif['type']) ?></span>
-                        &middot; <?= htmlspecialchars($message) ?>
+                        &middot; <?= htmlspecialchars($notif['message']) ?>
                         <br><span class="notif-time"><?= htmlspecialchars($notif['created_at']) ?></span>
                     </div>
                 </div>

@@ -10,33 +10,50 @@ require_once '../config/db.php';
 
 $user_id = $_SESSION['user_id'];
 
+// Whitelist the period value itself (defence in depth — this alone already
+// makes the old string-built condition unreachable by anything but these
+// three values). On top of that, the date threshold below is now passed in
+// as a bound parameter rather than ever being concatenated into SQL text.
+$allowed_periods = ['all', 'month', 'week'];
 $date_filter = $_GET['period'] ?? 'all';
-
-$date_condition = '';
-if ($date_filter === 'week') {
-    $date_condition = "AND logged_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)";
-} elseif ($date_filter === 'month') {
-    $date_condition = "AND logged_at >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)";
+if (!in_array($date_filter, $allowed_periods, true)) {
+    $date_filter = 'all';
 }
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM food_saved_log WHERE user_id = ? $date_condition");
-$stmt->execute([$user_id]);
-$total_saved = $stmt->fetchColumn();
+$since = null;
+if ($date_filter === 'week') {
+    $since = date('Y-m-d', strtotime('-7 days'));
+} elseif ($date_filter === 'month') {
+    $since = date('Y-m-d', strtotime('-1 month'));
+}
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM food_saved_log WHERE user_id = ? AND action = 'donated' $date_condition");
-$stmt->execute([$user_id]);
-$total_donated = $stmt->fetchColumn();
+// Only ever one of two fixed, hardcoded fragments — never built from input.
+$date_clause = $since !== null ? "AND logged_at >= ?" : "";
 
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM food_saved_log WHERE user_id = ? AND action = 'consumed' $date_condition");
-$stmt->execute([$user_id]);
-$total_consumed = $stmt->fetchColumn();
+function log_count(PDO $pdo, string $extra_where, int $user_id, ?string $since): int {
+    global $date_clause;
+    $params = [$user_id];
+    if ($since !== null) {
+        $params[] = $since;
+    }
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM food_saved_log WHERE user_id = ? $extra_where $date_clause");
+    $stmt->execute($params);
+    return (int) $stmt->fetchColumn();
+}
 
-$stmt = $pdo->prepare("SELECT category, COUNT(*) as count FROM food_saved_log WHERE user_id = ? $date_condition GROUP BY category ORDER BY count DESC");
-$stmt->execute([$user_id]);
+$total_saved    = log_count($pdo, "", $user_id, $since);
+$total_donated  = log_count($pdo, "AND action = 'donated'", $user_id, $since);
+$total_consumed = log_count($pdo, "AND action = 'consumed'", $user_id, $since);
+
+$params = [$user_id];
+if ($since !== null) $params[] = $since;
+
+$stmt = $pdo->prepare("SELECT category, COUNT(*) as count FROM food_saved_log WHERE user_id = ? $date_clause GROUP BY category ORDER BY count DESC");
+$stmt->execute($params);
 $category_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->prepare("SELECT action, COUNT(*) as count FROM food_saved_log WHERE user_id = ? $date_condition GROUP BY action");
-$stmt->execute([$user_id]);
+$stmt = $pdo->prepare("SELECT action, COUNT(*) as count FROM food_saved_log WHERE user_id = ? $date_clause GROUP BY action");
+$stmt->execute($params);
 $action_data = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $stmt = $pdo->prepare("SELECT COUNT(*) FROM food_items WHERE user_id = ? AND status = 'available'");

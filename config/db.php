@@ -74,10 +74,20 @@ try {
         user_id INT NOT NULL,
         type ENUM('expiry','donation','meal','account') NOT NULL,
         message TEXT NOT NULL,
+        related_item_id INT DEFAULT NULL,
         is_read TINYINT(1) DEFAULT 0,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Migration-safe for repos where `notifications` already existed
+    // without this column (see dashboard.php for why it replaced the old
+    // "parse the item ID back out of the message text" approach).
+    try {
+        $pdo->exec("ALTER TABLE notifications ADD COLUMN related_item_id INT DEFAULT NULL AFTER message");
+    } catch (PDOException $e) {
+        // Column already exists — nothing to do.
+    }
 
     $pdo->exec("CREATE TABLE IF NOT EXISTS meal_plans (
         id INT AUTO_INCREMENT PRIMARY KEY,
