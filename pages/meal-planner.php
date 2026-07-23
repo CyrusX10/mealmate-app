@@ -2,7 +2,7 @@
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /mealmate/auth/login.php');
+    header('Location: ' . BASE_URL . '/auth/login.php');
     exit;
 }
 
@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['edit_meal'])) {
 if (isset($_GET['delete_meal'])) {
     $stmt = $pdo->prepare("DELETE FROM meal_plans WHERE id = ? AND user_id = ?");
     $stmt->execute([$_GET['delete_meal'], $user_id]);
-    header('Location: /mealmate/pages/meal-planner.php?week=' . $week_offset);
+    header('Location: <?= BASE_URL ?>/pages/meal-planner.php?week=' . $week_offset);
     exit;
 }
 

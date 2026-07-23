@@ -2,7 +2,7 @@
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /mealmate/auth/login.php');
+    header('Location: ' . BASE_URL . '/auth/login.php');
     exit;
 }
 
@@ -14,7 +14,7 @@ $user_id = $_SESSION['user_id'];
 if (isset($_GET['read'])) {
     $stmt = $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE id = ? AND user_id = ?");
     $stmt->execute([$_GET['read'], $user_id]);
-    header('Location: /mealmate/pages/notifications.php');
+    header('Location: ' . BASE_URL . '/pages/notifications.php');
     exit;
 }
 
@@ -22,7 +22,7 @@ if (isset($_GET['read'])) {
 if (isset($_GET['read_all'])) {
     $stmt = $pdo->prepare("UPDATE notifications SET is_read = 1 WHERE user_id = ?");
     $stmt->execute([$user_id]);
-    header('Location: /mealmate/pages/notifications.php');
+    header('Location: ' . BASE_URL . '/pages/notifications.php');
     exit;
 }
 
@@ -30,7 +30,7 @@ if (isset($_GET['read_all'])) {
 if (isset($_GET['delete'])) {
     $stmt = $pdo->prepare("DELETE FROM notifications WHERE id = ? AND user_id = ?");
     $stmt->execute([$_GET['delete'], $user_id]);
-    header('Location: /mealmate/pages/notifications.php');
+    header('Location: ' . BASE_URL . '/pages/notifications.php');
     exit;
 }
 

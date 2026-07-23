@@ -2,7 +2,7 @@
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /mealmate/auth/login.php');
+    header('Location: ' . BASE_URL . '/auth/login.php');
     exit;
 }
 
@@ -54,7 +54,7 @@ if (isset($_GET['delete'])) {
     $stmt = $pdo->prepare("DELETE FROM food_items WHERE id = ? AND user_id = ?");
     $stmt->execute([$_GET['delete'], $user_id]);
     $success = 'Item deleted.';
-    header('Location: /mealmate/pages/inventory.php?msg=deleted');
+    header('Location: ' . BASE_URL . '/pages/inventory.php?msg=deleted');
     exit;
 }
 
@@ -71,7 +71,7 @@ if (isset($_GET['consume'])) {
         $stmt->execute([$user_id, $item['item_name'], $item['category']]);
         $success = 'Item marked as consumed.';
     }
-    header('Location: /mealmate/pages/inventory.php?msg=consumed');
+    header('Location: ' . BASE_URL . '/pages/inventory.php?msg=consumed');
     exit;
 }
 
@@ -90,7 +90,7 @@ if (isset($_GET['donate'])) {
         $stmt->execute([$user_id, $item['item_name'], $item['category']]);
         $success = 'Item listed as donation!';
     }
-    header('Location: /mealmate/pages/inventory.php?msg=donated');
+    header('Location: ' . BASE_URL . '/pages/inventory.php?msg=donated');
     exit;
 }
 
@@ -160,7 +160,7 @@ require_once '../includes/navbar.php';
             <option value="pantry" <?= $location_filter === 'pantry' ? 'selected' : '' ?>>Pantry</option>
         </select>
         <?php if (!empty($category_filter) || !empty($location_filter)): ?>
-            <a href="/mealmate/pages/inventory.php" class="btn btn-sm btn-warning">Clear Filters</a>
+            <a href="<?= BASE_URL ?>/pages/inventory.php" class="btn btn-sm btn-warning">Clear Filters</a>
         <?php endif; ?>
     </form>
 </div>

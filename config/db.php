@@ -16,9 +16,29 @@ try {
         full_name VARCHAR(255) NOT NULL,
         email VARCHAR(255) NOT NULL UNIQUE,
         password VARCHAR(255) NOT NULL,
+        account_status ENUM('pending','active') NOT NULL DEFAULT 'pending',
         two_fa_enabled TINYINT(1) DEFAULT 0,
         listing_visibility ENUM('public','private') DEFAULT 'public',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    // Migration-safe for repos that already had a `users` table before the
+    // account_status column existed. Fails silently (duplicate column) on
+    // installs where the CREATE TABLE above already included it.
+    try {
+        $pdo->exec("ALTER TABLE users ADD COLUMN account_status ENUM('pending','active') NOT NULL DEFAULT 'pending' AFTER password");
+    } catch (PDOException $e) {
+        // Column already exists — nothing to do.
+    }
+
+    $pdo->exec("CREATE TABLE IF NOT EXISTS email_verifications (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        code CHAR(6) NOT NULL,
+        attempts TINYINT UNSIGNED NOT NULL DEFAULT 0,
+        expires_at DATETIME NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
     $pdo->exec("CREATE TABLE IF NOT EXISTS food_items (

@@ -2,7 +2,7 @@
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /mealmate/auth/login.php');
+    header('Location: ' . BASE_URL . '/auth/login.php');
     exit;
 }
 
@@ -75,7 +75,7 @@ $recent_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <div class="action-bar">
     <h2>Recent Items</h2>
-    <a href="/mealmate/pages/inventory.php" class="btn btn-accent">Manage Inventory</a>
+    <a href="<?= BASE_URL ?>/pages/inventory.php" class="btn btn-accent">Manage Inventory</a>
 </div>
 
 <?php if (count($recent_items) > 0): ?>
@@ -105,7 +105,7 @@ $recent_items = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 <?php else: ?>
     <div class="card">
-        <p>No items in your inventory yet. <a href="/mealmate/pages/inventory.php">Add your first item</a>.</p>
+        <p>No items in your inventory yet. <a href="<?= BASE_URL ?>/pages/inventory.php">Add your first item</a>.</p>
     </div>
 <?php endif; ?>
 

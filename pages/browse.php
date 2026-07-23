@@ -2,7 +2,7 @@
 require_once '../includes/header.php';
 
 if (!isset($_SESSION['user_id'])) {
-    header('Location: /mealmate/auth/login.php');
+    header('Location: ' . BASE_URL . '/auth/login.php');
     exit;
 }
 
@@ -103,7 +103,7 @@ require_once '../includes/navbar.php';
             <option value="pantry" <?= $location_filter === 'pantry' ? 'selected' : '' ?>>Pantry</option>
         </select>
         <?php if (!empty($category_filter) || !empty($location_filter)): ?>
-            <a href="/mealmate/pages/browse.php" class="btn btn-sm btn-warning">Clear Filters</a>
+            <a href="<?= BASE_URL ?>/pages/browse.php" class="btn btn-sm btn-warning">Clear Filters</a>
         <?php endif; ?>
     </form>
 </div>
