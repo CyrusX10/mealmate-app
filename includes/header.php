@@ -14,6 +14,8 @@ $page_title = isset($page_title) ? $page_title . ' · MealMate' : 'MealMate';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track food, reduce waste, plan meals, and donate surplus with MealMate.">
+    <meta name="theme-color" content="#296a4d">
     <title><?= htmlspecialchars($page_title) ?></title>
     <link rel="icon" href="data:,">
     <link rel="preconnect" href="https://fonts.googleapis.com">
