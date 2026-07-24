@@ -1,0 +1,27 @@
+{
+  "name": "mealmate-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/CyrusX10/mealmate-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/CyrusX10/mealmate-app/issues"
+  },
+  "homepage": "https://github.com/CyrusX10/mealmate-app#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
