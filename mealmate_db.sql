@@ -153,7 +153,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- has these indexes will error on "duplicate key name". If you
 -- need to re-import, drop the database first:
 --   DROP DATABASE IF EXISTS mealmate_db;
--- then re-run this file.
+-- Run the import, then re-create the database and tables from scratch.
 -- =============================================================
 CREATE INDEX `idx_food_items_user_status` ON `food_items` (`user_id`, `status`);
 CREATE INDEX `idx_food_items_expiry` ON `food_items` (`expiry_date`);
