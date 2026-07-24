@@ -30,6 +30,7 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute([$user_id, $user_id]);
 $expiring = $stmt->fetchAll(PDO::FETCH_ASSOC);
+// A brief note for each expiring item keeps the dashboard feedback easy to follow.
 foreach ($expiring as $item) {
     $stmt = $pdo->prepare("INSERT INTO notifications (user_id, type, message, related_item_id) VALUES (?, 'expiry', ?, ?)");
     $stmt->execute([$user_id, $item['item_name'] . ' is expiring soon!', $item['id']]);
