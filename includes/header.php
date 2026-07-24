@@ -4,7 +4,7 @@ session_start();
 // Single source of truth for the app's base path. If this project ever
 // moves to a different folder under htdocs, update it here only.
 if (!defined('BASE_URL')) {
-    define('BASE_URL', '/mealmate');
+    define('BASE_URL', '/mealmate/mealmate-webapp');
 }
 
 $page_title = isset($page_title) ? $page_title . ' · MealMate' : 'MealMate';
