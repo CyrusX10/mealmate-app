@@ -72,7 +72,7 @@ require_once '../includes/navbar.php';
             <span>Enable 2FA</span>
             <label class="toggle">
                 <input type="hidden" name="two_fa_enabled" value="0">
-                <input type="checkbox" name="two_fa_enabled" value="1" <?= $user['two_fa_enabled'] ? 'checked' : '' ?>>
+                <input type="checkbox" name="two_fa_enabled" value="1" <?= $user['two_fa_enabled'] ? 'checked' : '' ?> aria-label="Enable two-factor authentication">
                 <span class="slider"></span>
             </label>
         </div>
