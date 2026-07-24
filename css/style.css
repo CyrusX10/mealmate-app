@@ -1020,6 +1020,18 @@ tr:hover { background: rgba(82, 183, 136, 0.05); }
 }
 
 /* ============================================================
+   Footer
+   ============================================================ */
+footer {
+    color: var(--text-light);
+    font-size: 0.85rem;
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-top: 1px solid var(--border);
+    margin-top: 2rem;
+}
+
+/* ============================================================
    Responsive
    ============================================================ */
 @media (max-width: 900px) {
