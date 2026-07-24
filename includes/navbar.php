@@ -44,7 +44,7 @@ function nav_active($page) {
 </nav>
 <main class="container">
 
-<div class="modal-overlay" id="confirmModal">
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
     <div class="modal modal-confirm">
         <div class="modal-confirm-icon" id="confirmIcon"><i class="fa-solid fa-triangle-exclamation"></i></div>
         <h3 id="confirmTitle">Are you sure?</h3>
