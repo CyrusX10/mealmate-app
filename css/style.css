@@ -176,7 +176,7 @@ a:hover { color: var(--accent); }
 /* Expiry colors */
 .expiry-safe { border-left: 4px solid var(--expiry-safe); }
 .expiry-warning { border-left: 4px solid var(--expiry-warning); }
-.expiry-danger { border-left: 4px solid var(--expiry-danger); background: #fff5f5; }
+.expiry-danger { border-left: 4px solid var(--expiry-danger); background: #f5f5f5; }
 
 /* Forms */
 .form {
