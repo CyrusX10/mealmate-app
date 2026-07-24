@@ -78,19 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form method="POST" action="" class="form auth-form" id="registerForm" novalidate>
                     <div class="form-group">
                         <label for="full_name">Full name</label>
-                        <input type="text" id="full_name" name="full_name" value="<?= htmlspecialchars($old['full_name']) ?>" autocomplete="name" required>
+                        <input type="text" id="full_name" name="full_name" value="<?= htmlspecialchars($old['full_name']) ?>" autocomplete="name" placeholder="Jane Doe" required>
                     </div>
 
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($old['email']) ?>" autocomplete="email" required>
+                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($old['email']) ?>" autocomplete="email" placeholder="you@example.com" required>
                         <small class="field-hint" id="emailHint"></small>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
                         <div class="input-with-action">
-                            <input type="password" id="password" name="password" minlength="8" autocomplete="new-password" required>
+                            <input type="password" id="password" name="password" minlength="8" autocomplete="new-password" placeholder="At least 8 characters" required>
                             <button type="button" class="toggle-visibility" data-target="password" aria-label="Show password">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
@@ -104,7 +104,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="form-group">
                         <label for="confirm_password">Confirm password</label>
                         <div class="input-with-action">
-                            <input type="password" id="confirm_password" name="confirm_password" minlength="8" autocomplete="new-password" required>
+                            <input type="password" id="confirm_password" name="confirm_password" minlength="8" autocomplete="new-password" placeholder="Re-enter your password" required>
                             <button type="button" class="toggle-visibility" data-target="confirm_password" aria-label="Show password">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
