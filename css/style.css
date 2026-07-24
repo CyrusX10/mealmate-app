@@ -134,7 +134,7 @@ a:hover { color: var(--accent); }
 
 .nav-cta {
     background: var(--accent);
-    color: #fff !important;
+    color: #fdfdfd !important;
     border-radius: 6px;
     margin-left: 0.25rem;
 }
