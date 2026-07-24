@@ -134,15 +134,15 @@ $today_str = date('Y-m-d');
                         <?= htmlspecialchars($meal['meal_name']) ?>
                     </div>
                     <div class="meal-actions">
-                        <button class="btn-edit-meal" data-id="<?= $meal['id'] ?>" data-name="<?= htmlspecialchars($meal['meal_name'], ENT_QUOTES) ?>" data-type="<?= $meal['meal_type'] ?>" data-notes="<?= htmlspecialchars($meal['notes'] ?? '', ENT_QUOTES) ?>" title="Edit">&#9998;</button>
-                        <a href="?delete_meal=<?= $meal['id'] ?>&week=<?= $week_offset ?>" title="Delete"
+                        <button class="btn-edit-meal" data-id="<?= $meal['id'] ?>" data-name="<?= htmlspecialchars($meal['meal_name'], ENT_QUOTES) ?>" data-type="<?= $meal['meal_type'] ?>" data-notes="<?= htmlspecialchars($meal['notes'] ?? '', ENT_QUOTES) ?>" title="Edit" aria-label="Edit <?= htmlspecialchars($meal['meal_name']) ?>">&#9998;</button>
+                        <a href="?delete_meal=<?= $meal['id'] ?>&week=<?= $week_offset ?>" title="Delete" aria-label="Delete <?= htmlspecialchars($meal['meal_name']) ?>"
                            data-confirm-title="Delete this meal?"
                            data-confirm-message="Remove &quot;<?= htmlspecialchars($meal['meal_name'], ENT_QUOTES) ?>&quot; from your plan?"
                            data-confirm-icon="fa-trash" data-confirm-variant="danger" data-confirm-label="Delete">&times;</a>
                     </div>
                 </div>
             <?php endforeach; ?>
-            <button type="button" class="day-add-btn" data-modal="addMealModal" data-prefill-date="<?= $date_str ?>">
+            <button type="button" class="day-add-btn" data-modal="addMealModal" data-prefill-date="<?= $date_str ?>" aria-label="Add meal to <?= $day_name ?>">
                 <i class="fa-solid fa-plus"></i>
             </button>
         </div>
