@@ -1334,6 +1334,7 @@ tr:hover { background: rgba(82, 183, 136, 0.05); }
     transition: border-color 0.15s, color 0.15s;
 }
 
+
 .day-add-btn:hover { border-color: var(--accent); color: var(--primary); }
 
 /* Unit dropdown "other" field */
