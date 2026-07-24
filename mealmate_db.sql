@@ -130,9 +130,9 @@ CREATE TABLE IF NOT EXISTS `meal_plans` (
 CREATE TABLE IF NOT EXISTS `food_saved_log` (
     `id` INT AUTO_INCREMENT PRIMARY KEY,
     `user_id` INT NOT NULL,
-    `item_name` VARCHAR(260) NOT NULL,
+    `item_name` VARCHAR(255) NOT NULL,
     `action` ENUM('consumed','donated') NOT NULL,
-    `category` VARCHAR(55) NOT NULL,
+    `category` VARCHAR(50) NOT NULL,
     `logged_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT `fk_food_saved_log_user`
         FOREIGN KEY (`user_id`) REFERENCES `users`(`id`) ON DELETE CASCADE
