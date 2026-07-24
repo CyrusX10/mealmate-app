@@ -89,7 +89,7 @@ require_once '../includes/navbar.php';
 
 <div class="filters">
     <form method="GET" action="">
-        <select name="category" onchange="this.form.submit()">
+        <select name="category" onchange="this.form.submit()" aria-label="Filter by category">
             <option value="">All Categories</option>
             <option value="fruits" <?= $category_filter === 'fruits' ? 'selected' : '' ?>>Fruits</option>
             <option value="vegetables" <?= $category_filter === 'vegetables' ? 'selected' : '' ?>>Vegetables</option>
@@ -98,7 +98,7 @@ require_once '../includes/navbar.php';
             <option value="grains" <?= $category_filter === 'grains' ? 'selected' : '' ?>>Grains</option>
             <option value="other" <?= $category_filter === 'other' ? 'selected' : '' ?>>Other</option>
         </select>
-        <select name="location" onchange="this.form.submit()">
+        <select name="location" onchange="this.form.submit()" aria-label="Filter by location">
             <option value="">All Locations</option>
             <option value="fridge" <?= $location_filter === 'fridge' ? 'selected' : '' ?>>Fridge</option>
             <option value="freezer" <?= $location_filter === 'freezer' ? 'selected' : '' ?>>Freezer</option>
