@@ -188,7 +188,7 @@ function unit_select_html(string $id_prefix, string $current_unit, array $units)
 
 <div class="filters">
     <form method="GET" action="">
-        <select name="category" onchange="this.form.submit()">
+        <select name="category" onchange="this.form.submit()" aria-label="Filter by category">
             <option value="">All Categories</option>
             <option value="fruits" <?= $category_filter === 'fruits' ? 'selected' : '' ?>>Fruits</option>
             <option value="vegetables" <?= $category_filter === 'vegetables' ? 'selected' : '' ?>>Vegetables</option>
@@ -197,7 +197,7 @@ function unit_select_html(string $id_prefix, string $current_unit, array $units)
             <option value="grains" <?= $category_filter === 'grains' ? 'selected' : '' ?>>Grains</option>
             <option value="other" <?= $category_filter === 'other' ? 'selected' : '' ?>>Other</option>
         </select>
-        <select name="location" onchange="this.form.submit()">
+        <select name="location" onchange="this.form.submit()" aria-label="Filter by location">
             <option value="">All Locations</option>
             <option value="fridge" <?= $location_filter === 'fridge' ? 'selected' : '' ?>>Fridge</option>
             <option value="freezer" <?= $location_filter === 'freezer' ? 'selected' : '' ?>>Freezer</option>
@@ -325,7 +325,7 @@ function unit_select_html(string $id_prefix, string $current_unit, array $units)
         <form method="POST" action="">
             <div class="form-group">
                 <label for="item_name">Item Name</label>
-                <input type="text" id="item_name" name="item_name" required>
+                <input type="text" id="item_name" name="item_name" placeholder="e.g. Tomatoes" required>
             </div>
             <div class="form-group">
                 <label for="category">Category</label>
@@ -341,7 +341,7 @@ function unit_select_html(string $id_prefix, string $current_unit, array $units)
             </div>
             <div class="form-group">
                 <label for="quantity">Quantity</label>
-                <input type="number" step="0.01" id="quantity" name="quantity" min="0.01" required>
+                <input type="number" step="0.01" id="quantity" name="quantity" min="0.01" placeholder="1" required>
             </div>
             <div class="form-group">
                 <label for="new_unit_select">Unit</label>
