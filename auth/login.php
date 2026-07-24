@@ -66,13 +66,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form method="POST" action="" class="form auth-form" id="loginForm" novalidate>
                     <div class="form-group">
                         <label for="email">Email</label>
-                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($old_email) ?>" autocomplete="email" required>
+                        <input type="email" id="email" name="email" value="<?= htmlspecialchars($old_email) ?>" autocomplete="email" placeholder="you@example.com" required>
                     </div>
 
                     <div class="form-group">
                         <label for="password">Password</label>
                         <div class="input-with-action">
-                            <input type="password" id="password" name="password" autocomplete="current-password" required>
+                            <input type="password" id="password" name="password" autocomplete="current-password" placeholder="Enter your password" required>
                             <button type="button" class="toggle-visibility" data-target="password" aria-label="Show password">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
