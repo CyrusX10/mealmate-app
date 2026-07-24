@@ -383,7 +383,7 @@ th {
     font-weight: 600;
 }
 
-tr:hover { background: rgba(82,183,136,0.05); }
+tr:hover { background: rgba(82, 183, 136, 0.05); }
 
 /* Dashboard welcome */
 .welcome {
