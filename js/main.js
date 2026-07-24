@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         var closeBtn = document.createElement('button');
         closeBtn.type = 'button';
         closeBtn.className = 'alert-close';
-        closeBtn.innerHTML = '&times;';
+        closeBtn.textContent = '\u00d7';
         closeBtn.setAttribute('aria-label', 'Dismiss');
         closeBtn.addEventListener('click', function() { dismissToast(toast); });
         toast.appendChild(closeBtn);
