@@ -15,6 +15,7 @@ function nav_active($page) {
     return $current_page === $page ? ' class="active"' : '';
 }
 ?>
+<!-- Navigation remains straightforward so users can move between core modules without friction. -->
 <nav class="navbar">
     <div class="nav-container">
         <a href="<?= BASE_URL ?>/index.php" class="nav-logo"><i class="fa-solid fa-leaf"></i> MealMate</a>
