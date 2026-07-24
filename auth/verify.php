@@ -1,5 +1,5 @@
 <?php
-$page_title = 'Verify your email';
+$page_title = 'Verify Your Email';
 require_once '../includes/header.php';
 
 if (isset($_SESSION['user_id'])) {
