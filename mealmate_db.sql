@@ -5,12 +5,10 @@
 -- `mysql -u root -p < mealmate_db.sql`) to set up the database
 -- without relying on config/db.php's auto-create-on-first-request
 -- behaviour.
---
 -- IMPORTANT: this file is hand-kept in sync with the CREATE TABLE
 -- statements in config/db.php. If you change a table there
 -- (add/rename/drop a column), update this file to match, or the
 -- two will drift apart.
---
 -- Engine: InnoDB | Charset: utf8mb4 (utf8mb4_unicode_ci)
 -- =============================================================
 
@@ -144,7 +142,6 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Helpful indexes (not strictly required, but the queries in
 -- inventory.php / dashboard.php / analytics.php / browse.php all
 -- filter by these columns constantly).
---
 -- Note: these CREATE INDEX statements are NOT wrapped in an
 -- existence check (MySQL doesn't support IF NOT EXISTS here the
 -- way it does for CREATE TABLE). That's fine for a first-time
