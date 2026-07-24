@@ -204,8 +204,8 @@ a:hover { color: var(--accent); }
 .form-group textarea {
     width: 100%;
     padding: 0.6rem 0.75rem;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
     font-size: 0.95rem;
     font-family: inherit;
 }
