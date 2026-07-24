@@ -6,7 +6,6 @@ session_start();
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/mealmate/mealmate-webapp');
 }
-
 $page_title = isset($page_title) ? $page_title . ' · MealMate' : 'MealMate';
 ?>
 <!DOCTYPE html>
