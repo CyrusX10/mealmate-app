@@ -990,7 +990,6 @@ tr:hover { background: rgba(82, 183, 136, 0.05); }
 .field-hint.hint-invalid { color: var(--error); }
 
 .password-strength { margin-top: 0.5rem; }
-
 .password-strength-bar {
     height: 5px;
     background: var(--border);
