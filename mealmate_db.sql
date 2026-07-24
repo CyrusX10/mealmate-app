@@ -17,7 +17,6 @@ CREATE DATABASE IF NOT EXISTS `mealmate_db`
 USE `mealmate_db`;
 
 SET FOREIGN_KEY_CHECKS = 0;
-
 -- -------------------------------------------------------------
 -- users
 -- -------------------------------------------------------------
