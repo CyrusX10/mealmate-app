@@ -11,7 +11,6 @@
             <li><i class="fa-solid fa-bell"></i> Get nudged before food goes to waste</li>
             <li><i class="fa-solid fa-hand-holding-heart"></i> Donate surplus food to your community</li>
         </ul>
-
         <div class="receipt" aria-hidden="true">
             <div class="receipt-title">WEEKLY IMPACT</div>
             <div class="receipt-row"><span>Items tracked</span><span>18</span></div>
