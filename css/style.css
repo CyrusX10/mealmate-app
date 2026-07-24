@@ -233,7 +233,7 @@ a:hover { color: var(--accent); }
     font-size: 0.95rem;
     cursor: pointer;
     font-family: inherit;
-    transition: background 0.2s;
+    transition: background 0.2s, transform 0.15s;
 }
 
 .btn-primary {
