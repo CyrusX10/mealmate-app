@@ -1366,3 +1366,10 @@ footer {
 
 /* Unit dropdown "other" field */
 .unit-custom-wrap { margin-top: 0.5rem; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
