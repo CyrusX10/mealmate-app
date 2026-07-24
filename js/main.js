@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function() {
 
-    // Mobile nav toggle
+    // Mobile nav toggle remains lightweight and easy to maintain.
     var navToggle = document.getElementById('navToggle');
     var navLinks = document.getElementById('navLinks');
     if (navToggle && navLinks) {
