@@ -214,7 +214,7 @@ a:hover { color: var(--accent); }
 .form-group textarea:focus {
     outline: none;
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(82,183,136,0.2);
+    box-shadow: 0 0 0 3px rgba(85, 185, 138, 0.2);
 }
 
 .form-footer {
