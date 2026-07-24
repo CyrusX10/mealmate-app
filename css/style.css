@@ -1379,3 +1379,15 @@ footer {
         transition-duration: 0.01ms !important;
     }
 }
+
+@media print {
+    .navbar, .modal-overlay, .alert-toast, .btn, .nav-toggle {
+        display: none !important;
+    }
+    body {
+        font-size: 12pt;
+        color: #000;
+        background: #fff;
+    }
+    .container { max-width: 100%; padding: 0; }
+}
