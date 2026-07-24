@@ -6,6 +6,7 @@ session_start();
 if (!defined('BASE_URL')) {
     define('BASE_URL', '/mealmate/mealmate-webapp');
 }
+// Keep the app's shared base URL in one place so links remain stable across local setups.
 $page_title = isset($page_title) ? $page_title . ' · MealMate' : 'MealMate';
 ?>
 <!DOCTYPE html>
