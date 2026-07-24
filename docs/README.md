@@ -8,6 +8,8 @@
 
 MealMate is developed as part of the **BIT216 – Software Engineering Principles** assignment at **HELP University / Mid-Valley International College (MVIC)**, Semester May 2026.
 
+This repository is kept intentionally lightweight for local demonstration and classroom review, with small refinement commits that do not change core user flows.
+
 The app addresses the growing problem of household food waste by giving users the tools to:
 - Track what food they have and when it expires
 - Plan weekly meals around available ingredients
