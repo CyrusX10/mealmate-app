@@ -121,7 +121,7 @@ a:hover { color: var(--accent); }
 
 .nav-links a.active {
     color: #fff;
-    background: rgba(255,255,255,0.16);
+    background: rgba(8, 6, 6, 0.16);
     border-radius: 4px;
     font-weight: 600;
 }
