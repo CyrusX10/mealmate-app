@@ -563,7 +563,7 @@ tr:hover { background: rgba(82, 183, 136, 0.08); }
     display: none;
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.55);
     z-index: 2000;
     justify-content: center;
     align-items: center;
