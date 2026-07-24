@@ -14,6 +14,7 @@ $error = '';
 $old = ['full_name' => '', 'email' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Registration keeps its validation feedback clear and user-friendly.
     $full_name = trim($_POST['full_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
