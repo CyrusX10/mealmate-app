@@ -16,7 +16,7 @@ function nav_active($page) {
 }
 ?>
 <!-- Navigation remains straightforward so users can move between core modules without friction. -->
-<nav class="navbar">
+<nav class="navbar" aria-label="Main navigation">
     <div class="nav-container">
         <a href="<?= BASE_URL ?>/index.php" class="nav-logo"><i class="fa-solid fa-leaf"></i> MealMate</a>
         <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation">&#9776;</button>
