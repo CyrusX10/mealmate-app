@@ -218,6 +218,11 @@ a:hover { color: var(--accent); text-decoration: underline; }
     box-shadow: 0 0 0 3px rgba(85, 185, 138, 0.2);
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+    color: #999;
+}
+
 .form-footer {
     margin-top: 1rem;
     text-align: center;
