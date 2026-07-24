@@ -937,6 +937,7 @@ tr:hover { background: rgba(82, 183, 136, 0.05); }
     border: 1px solid var(--oat-border);
     border-radius: var(--radius-lg);
     padding: 1.5rem;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .feature-icon {
