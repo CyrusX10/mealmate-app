@@ -112,13 +112,13 @@ require_once '../includes/navbar.php';
     <div class="chart-container">
         <h2>Food Saved by Category</h2>
         <div class="chart-wrapper">
-            <canvas id="categoryChart"></canvas>
+            <canvas id="categoryChart" role="img" aria-label="Bar chart showing food saved by category"></canvas>
         </div>
     </div>
     <div class="chart-container">
         <h2>Consumed vs Donated</h2>
         <div class="chart-wrapper">
-            <canvas id="actionChart"></canvas>
+            <canvas id="actionChart" role="img" aria-label="Pie chart showing consumed vs donated items"></canvas>
         </div>
     </div>
 </div>
