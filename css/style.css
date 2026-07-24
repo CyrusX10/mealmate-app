@@ -32,6 +32,7 @@
 }
 
 body {
+    /* The visual tone is intentionally calm and readable for the app experience. */
     font-family: var(--font-body);
     color: var(--text);
     background: var(--bg);
